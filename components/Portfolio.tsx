@@ -3,13 +3,13 @@
 import { useState } from "react"
 import Image from "next/image"
 
-type Session = {
+type PortfolioSession = {
   id: string
   title: string
   cover: string
 }
 
-const SESSIONS: Session[] = [
+const SESSIONS: PortfolioSession[] = [
   { id: "session-1", title: "КОНТЕНТ СЪЁМКА", cover: "/portfolio/session-1/cover.jpg" },
   { id: "session-2", title: "LOVE STORY", cover: "/portfolio/session-2/cover.jpg" },
   { id: "session-3", title: "ИНДИВИДУАЛЬНАЯ", cover: "/portfolio/session-3/cover.jpg" },
@@ -25,36 +25,30 @@ export default function Portfolio() {
     <section id="portfolio" className="px-6 py-20">
       <div className="max-w-6xl mx-auto">
 
-        {/* HEADER */}
-        <div className="mb-10">
-          <h2 className="text-3xl md:text-4xl font-semibold text-white">
-            Портфолио
-          </h2>
-          <p className="mt-2 text-white/70">
-            6 фотосессий. Нажмите на любую — откроется серия из 9 фото.
-          </p>
-        </div>
+        <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
+          Портфолио
+        </h2>
 
-        {/* GRID */}
+        <p className="text-white/70 mb-10">
+          6 фотосессий. Нажмите на любую — откроется серия из 9 фото.
+        </p>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {SESSIONS.map((s) => (
             <button
               key={s.id}
               onClick={() => setOpenSession(s.id)}
-              className="group relative rounded-3xl overflow-hidden border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] transition"
+              className="relative group rounded-3xl overflow-hidden border border-white/10"
             >
               <div className="relative aspect-[4/5]">
                 <Image
                   src={s.cover}
                   alt={s.title}
                   fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="object-cover group-hover:scale-105 transition"
                 />
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition" />
-
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-white text-xs md:text-sm font-light tracking-[0.35em]">
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                  <span className="text-white text-xs tracking-[0.35em] font-light">
                     {s.title}
                   </span>
                 </div>
@@ -63,19 +57,17 @@ export default function Portfolio() {
           ))}
         </div>
 
-        {/* MODAL */}
         {openSession && (
-          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-6">
-            <div className="relative max-w-5xl w-full bg-black rounded-3xl p-6 overflow-y-auto max-h-[90vh]">
-
+          <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-6">
+            <div className="bg-black rounded-3xl p-6 max-w-5xl w-full max-h-[90vh] overflow-y-auto relative">
               <button
                 onClick={() => setOpenSession(null)}
-                className="absolute top-4 right-4 text-white/70 hover:text-white text-sm"
+                className="absolute top-4 right-4 text-white/70"
               >
-                ✕ Закрыть
+                ✕
               </button>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-10">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-8">
                 {Array.from({ length: 9 }).map((_, i) => (
                   <div key={i} className="relative aspect-[4/5] rounded-xl overflow-hidden">
                     <Image
@@ -83,12 +75,10 @@ export default function Portfolio() {
                       alt=""
                       fill
                       className="object-cover"
-                      sizes="33vw"
                     />
                   </div>
                 ))}
               </div>
-
             </div>
           </div>
         )}
