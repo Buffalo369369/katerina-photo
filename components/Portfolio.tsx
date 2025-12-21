@@ -1,6 +1,13 @@
 "use client"
 
 import { useState } from "react"
+import Image from "next/image"
+
+type Session = {
+  id: string
+  title: string
+  cover: string
+}
 
 const SESSIONS: Session[] = [
   { id: "session-1", title: "КОНТЕНТ СЪЁМКА", cover: "/portfolio/session-1/cover.jpg" },
@@ -11,76 +18,81 @@ const SESSIONS: Session[] = [
   { id: "session-6", title: "ТВОРЧЕСКАЯ", cover: "/portfolio/session-6/cover.jpg" },
 ]
 
-
 export default function Portfolio() {
   const [openSession, setOpenSession] = useState<string | null>(null)
 
   return (
     <section id="portfolio" className="px-6 py-20">
-      <div className="mx-auto max-w-6xl">
-        <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-center">
-          Портфолио
-        </h2>
+      <div className="max-w-6xl mx-auto">
+
+        {/* HEADER */}
+        <div className="mb-10">
+          <h2 className="text-3xl md:text-4xl font-semibold text-white">
+            Портфолио
+          </h2>
+          <p className="mt-2 text-white/70">
+            6 фотосессий. Нажмите на любую — откроется серия из 9 фото.
+          </p>
+        </div>
 
         {/* GRID */}
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {SESSIONS.map((s) => (
             <button
               key={s.id}
               onClick={() => setOpenSession(s.id)}
-              className="group relative overflow-hidden rounded-3xl border border-white/10 bg-black/30"
+              className="group relative rounded-3xl overflow-hidden border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] transition"
             >
-              <img
-                src={`/portfolio/${s.id}/cover.jpg`}
-                alt={s.title}
-                className="h-[320px] w-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
+              <div className="relative aspect-[4/5]">
+                <Image
+                  src={s.cover}
+                  alt={s.title}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition" />
 
-              {/* dark overlay */}
-              <div className="absolute inset-0 bg-black/40 transition-opacity duration-500 group-hover:bg-black/55" />
-
-              {/* title */}
-              <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-                <span className="text-center text-sm md:text-base font-light tracking-[0.3em] uppercase text-white/90">
-                  {s.title}
-                </span>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-white text-xs md:text-sm font-light tracking-[0.35em]">
+                    {s.title}
+                  </span>
+                </div>
               </div>
             </button>
           ))}
         </div>
-      </div>
 
-      {/* MODAL */}
-      {openSession && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-6"
-          onClick={() => setOpenSession(null)}
-        >
-          <div
-            className="relative max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-3xl bg-black p-6"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* close */}
-            <button
-              onClick={() => setOpenSession(null)}
-              className="absolute right-4 top-4 rounded-full bg-white text-black px-3 py-1 text-sm"
-            >
-              ✕
-            </button>
+        {/* MODAL */}
+        {openSession && (
+          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-6">
+            <div className="relative max-w-5xl w-full bg-black rounded-3xl p-6 overflow-y-auto max-h-[90vh]">
 
-            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-              {Array.from({ length: 9 }).map((_, i) => (
-                <img
-                  key={i}
-                  src={`/portfolio/${openSession}/${i + 1}.jpg`}
-                  alt=""
-                  className="w-full rounded-xl object-cover"
-                />
-              ))}
+              <button
+                onClick={() => setOpenSession(null)}
+                className="absolute top-4 right-4 text-white/70 hover:text-white text-sm"
+              >
+                ✕ Закрыть
+              </button>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-10">
+                {Array.from({ length: 9 }).map((_, i) => (
+                  <div key={i} className="relative aspect-[4/5] rounded-xl overflow-hidden">
+                    <Image
+                      src={`/portfolio/${openSession}/${i + 1}.jpg`}
+                      alt=""
+                      fill
+                      className="object-cover"
+                      sizes="33vw"
+                    />
+                  </div>
+                ))}
+              </div>
+
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </section>
   )
 }
