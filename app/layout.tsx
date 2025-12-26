@@ -1,4 +1,19 @@
-export const metadata = {
-  title: "Katygaa — Photographer",
-  description: "Фотограф | Портреты • Love Story • Контент",
+import "./globals.css";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Katygaa",
+  description: "Photography portfolio",
 };
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
+}
